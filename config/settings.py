@@ -27,11 +27,16 @@ SECRET_KEY = os.environ.get(
     "django-insecure-local-development-only-change-this-before-deployment",
 )
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DJANGO_DEBUG", "True").lower() == "true"
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "testserver"]
-
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.environ.get(
+        "DJANGO_ALLOWED_HOSTS",
+        "localhost,127.0.0.1,testserver",
+    ).split(",")
+    if host.strip()
+]
 
 # Application definition
 
