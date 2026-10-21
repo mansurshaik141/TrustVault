@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TrustVault - My Documents</title>
+</head>
+<body>
+    <h1>TrustVault</h1>
+    <h2>My accessible documents</h2>
+
+    {% if documents %}
+        <ul>
+            {% for document in documents %}
+                <li>
+                    <a href="{% url 'documents:detail' document.id %}">
+                        {{ document.title }}
+                    </a>
+                    — Owner: {{ document.owner.username }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No accessible documents yet.</p>
+    {% endif %}
+
+    <hr>
+
+    <p>
+        <a href="/admin/">Admin dashboard</a>
+    </p>
+
+    <p>
+        <a href="{% url 'login' %}">Login</a>
+    </p>
+
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
+
+    <p>
+        <a href="{% url 'documents:upload' %}">Upload a document</a>
+    </p>
+</body>
+</html>

@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ document.title }} - TrustVault</title>
+</head>
+<body>
+    <h1>{{ document.title }}</h1>
+
+    <p>{{ document.description }}</p>
+    <p>Category: {{ document.category }}</p>
+    <p>Owner: {{ document.owner.username }}</p>
+
+    <p>
+        <a href="{% url 'documents:download' document.id %}">
+            Download document
+        </a>
+    </p>
+
+    {% if can_edit %}
+        <p>
+            <a href="{% url 'documents:edit' document.id %}">
+                Edit document details
+            </a>
+        </p>
+    {% endif %}
+
+    {% if can_manage %}
+        <hr>
+        <h2>Share Document</h2>
+
+        <form method="post"
+              action="{% url 'documents:share' document.id %}">
+            {% csrf_token %}
+            {{ share_form.as_p }}
+            <button type="submit">Share Document</button>
+        </form>
+
+        <hr>
+        <h2>Users with Access</h2>
+
+        {% if grants %}
+            <ul>
+                {% for grant in grants %}
+                    <li>
+                        {{ grant.user.username }}
+                        — Permission: {{ grant.permission }}
+
+                        <form method="post"
+                              action="{% url 'documents:revoke' document.id grant.user.id %}"
+                              style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit">
+                                Revoke Access
+                            </button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No users have been granted access.</p>
+        {% endif %}
+    {% endif %}
+
+    <p>
+        <a href="{% url 'documents:list' %}">
+            Back to documents
+        </a>
+    </p>
+</body>
+</html>

@@ -1,0 +1,23 @@
+
+.venv/
+__pycache__/
+*.py[cod]
+db.sqlite3
+db.sqlite3.backup
+private_uploads/
+.env
+*.log
+# Python and test files
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environment and secret files
+.env.*
+!.env.example
+*.key
+*.pem
+
+# Local development data
+db.sqlite3-*
+test_errors.txt

@@ -1,0 +1,28 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Document - TrustVault</title>
+</head>
+<body>
+    <h1>Edit Document</h1>
+
+    <p>Update the details for: {{ document.title }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {{ edit_form.as_p }}
+
+        <button type="submit">Save Changes</button>
+    </form>
+
+    <p>
+        <a href="{% url 'documents:detail' document.pk %}">
+            Cancel and return to document
+        </a>
+    </p>
+</body>
+</html>
