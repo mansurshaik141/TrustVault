@@ -1,5 +1,5 @@
-
-from django.test import TestCase
+					
+from django.test import TestCase, override_settings
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
@@ -8,7 +8,7 @@ from documents.models import AuditLog, Document, DocumentAccess
 
 User = get_user_model()
 
-
+@override_settings(SECURE_SSL_REDIRECT=False)
 class DocumentSecurityTests(TestCase):
     def setUp(self):
         self.owner = User.objects.create_user(
@@ -260,6 +260,7 @@ class AuditLogModelTests(TestCase):
 
 
 
+@override_settings(SECURE_SSL_REDIRECT=False)
 class AuditTrailViewTests(TestCase):
     def setUp(self):
         self.owner = User.objects.create_user(

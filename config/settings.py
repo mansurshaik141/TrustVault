@@ -28,13 +28,13 @@ SECRET_KEY = os.environ.get(
     "django-insecure-local-development-only-change-this-before-deployment",
 )
 
-DEBUG = os.environ.get("DJANGO_DEBUG", "True").lower() == "true"
+DEBUG = os.environ.get("DJANGO_DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = [
     host.strip()
     for host in os.environ.get(
         "DJANGO_ALLOWED_HOSTS",
-        "localhost,127.0.0.1,testserver",
+        "shaikmansur.pythonanywhere.com,localhost,127.0.0.1,testserver",
     ).split(",")
     if host.strip()
 ]
@@ -147,6 +147,14 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+# Production HTTPS and cookie security
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SECURE_SSL_REDIRECT = True
+SECURE_HSTS_SECONDS = 3600
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+CSRF_TRUSTED_ORIGINS = ["https://shaikmansur.pythonanywhere.com"]
+
 MEDIA_ROOT = BASE_DIR / "private_uploads"
 
 LOGIN_REDIRECT_URL = '/documents/'
