@@ -110,6 +110,7 @@ class AuditLogModelTests(TestCase):
             owner=self.user,
         )
 
+
     def test_invalid_checkpoint_signature_is_rejected(self):
         import json
         import tempfile

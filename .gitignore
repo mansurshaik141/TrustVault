@@ -21,3 +21,4 @@ htmlcov/
 # Local development data
 db.sqlite3-*
 test_errors.txt
+staticfiles/
