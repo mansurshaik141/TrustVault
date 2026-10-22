@@ -110,7 +110,6 @@ class AuditLogModelTests(TestCase):
             owner=self.user,
         )
 
-
     def test_invalid_checkpoint_signature_is_rejected(self):
         import json
         import tempfile
@@ -233,6 +232,31 @@ class AuditLogModelTests(TestCase):
 
         with self.assertRaises(ValidationError):
             log.save()
+
+    def test_verify_chain_detects_broken_previous_hash(self):
+        first_log = AuditLog.objects.create(
+            action=AuditLog.Action.VIEW,
+            result=AuditLog.Result.SUCCESS,
+            details="First audit record",
+        )
+
+        second_log = AuditLog.objects.create(
+            action=AuditLog.Action.DOWNLOAD,
+            result=AuditLog.Result.SUCCESS,
+            details="Second audit record",
+        )
+
+        # Simulate database tampering in the isolated test database.
+        AuditLog.objects.filter(pk=second_log.pk).update(
+            previous_hash="broken_test_hash",
+        )
+
+        errors = AuditLog.verify_chain()
+
+        self.assertTrue(
+            any("previous hash mismatch" in error for error in errors),
+            f"Expected a broken-link error, but received: {errors}",
+        )
 
 
 

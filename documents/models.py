@@ -180,6 +180,33 @@ class AuditLog(models.Model):
 
         return hashlib.sha256(encoded).hexdigest()
 
+    @classmethod
+    def verify_chain(cls):
+        """
+        Verify that each audit record's hash is valid
+        and links to the previous record.
+        Returns an empty list if the chain is valid.
+        """
+        errors = []
+        expected_previous_hash = ""
+
+        for entry in cls.objects.order_by("pk").iterator():
+            if entry.previous_hash != expected_previous_hash:
+                errors.append(
+                    f"Log ID {entry.pk}: previous hash mismatch"
+                )
+
+            calculated_hash = entry.calculate_hash()
+
+            if entry.record_hash != calculated_hash:
+                errors.append(
+                    f"Log ID {entry.pk}: record hash mismatch"
+                )
+
+            expected_previous_hash = entry.record_hash
+
+        return errors
+
     def save(self, *args, **kwargs):
         # Existing audit records cannot be changed through save().
         if not self._state.adding:
